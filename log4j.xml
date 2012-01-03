@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration>
+	<appender name="stdout" class="org.yeeha.dtransit.log.AntConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} %-5.5p [%-9.9c{1}] - %m%n" />
+		</layout>
+		<!-- filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="debug" />
+		</filter-->
+	</appender>
+	
+	<appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="DatePattern" value=".yyyy-MM-dd" />
+		<param name="File" value="log/DataTransit.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} %-5.5p [%9.9c{1}] - %m%n" />
+		</layout>
+	</appender>
+
+	<root>
+		<priority value="info" />
+		<appender-ref ref="file" />
+		<appender-ref ref="stdout" />
+	</root>
+</log4j:configuration>
+

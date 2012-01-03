@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+WSDL description for the OpenTrust SCM SOAP Connector, Version 2.2
+
+This code was developped by OpenTrust (http://www.opentrust.com/).
+
+Copyright(C) 2000-2007 OpenTrust
+
+Please refer to your contract/license or contact license@opentrust.com
+for any question related to the license of this software.
+
+
+$Id: otscm-core-connector-2.2.wsdl 102847 2009-10-20 18:33:55Z fgarzon $
+$HeadURL: svn+ssh://svn.int.opentrust.com/opt/svn/Offre/IDX-SCM/tags/scm-4.2.0/tools/SOAPConnector/otscm-core-connector-2.2.wsdl $
+-->
+
+<wsdl:definitions targetNamespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:otmsg="http://www.opentrust.com/OpenTrust/XML/Message/1.2"
+                  xmlns:scmconn="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2">
+
+  <wsdl:types>
+    <wsdl:documentation>Types used by the OpenTrust SCM SOAP Connector</wsdl:documentation>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+               targetNamespace="http://www.opentrust.com/OpenTrust/XML/Message/1.2">
+      <xs:annotation>
+        <xs:documentation> External definition of the
+        OpenTrust Message schema </xs:documentation>
+      </xs:annotation>
+      <xs:include schemaLocation="otmessage-1.2.xsd"/>
+    </xs:schema>
+
+  </wsdl:types>
+  <wsdl:message name="OTMessageIn">
+    <wsdl:documentation>Input message used for every OpenTrust SCM Connector operation : contains one
+    argument : an OTMessage </wsdl:documentation>
+    <wsdl:part name="InputParameter" type="otmsg:OTMessageType"/>
+  </wsdl:message>
+  <wsdl:message name="OTMessageOut">
+    <wsdl:documentation>Output message used for every OpenTrust SCM Connector operation : contains one
+    argument : an OTMessage</wsdl:documentation>
+    <wsdl:part name="OutputParameter" type="otmsg:OTMessageType"/>
+  </wsdl:message>
+  <wsdl:portType name="OTSCMConnectorSOAPPortType">
+    <wsdl:operation name="searchForCards">
+      <wsdl:documentation> Search for cards </wsdl:documentation>
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="revoke">
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="unlock">
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="unlockOnline">
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="recycle">
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="migration">
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="recoveryRequest">
+      <wsdl:documentation>register a recovery request</wsdl:documentation>
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="revocationRequest">
+      <wsdl:documentation>register a revocation request</wsdl:documentation>
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="cardInfo">
+      <wsdl:documentation>Retrieve extended informations about a
+      card</wsdl:documentation>
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="prePersonalize">
+      <wsdl:documentation>Create a new card entry declared as being pre-personalized</wsdl:documentation>
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="authorizeCardActivation">
+      <wsdl:documentation>Authorize the activation of a pre-personalized card</wsdl:documentation>
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="version">
+      <wsdl:documentation>retrieve version information about the SCM Core connector </wsdl:documentation>
+      <wsdl:input message="scmconn:OTMessageIn"/>
+      <wsdl:output message="scmconn:OTMessageOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="OTSCMConnectorSOAPBinding" type="scmconn:OTSCMConnectorSOAPPortType">
+    <wsdl:documentation> SOAP Binding for the OpenTrust SCM Connector </wsdl:documentation>
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="searchForCards">
+      <wsdl:documentation> Search for cards </wsdl:documentation>
+      <soap:operation
+          soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/searchForCards"
+          style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="revoke">
+      <wsdl:documentation>Revoke a card</wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/revoke"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="unlock">
+      <wsdl:documentation> retrieve an "unlock passphrase" to unlock a card </wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/unlock"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="unlockOnline">
+      <wsdl:documentation> retrieve an "unlock challenge" to
+      unlock a card in connected mode</wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/unlockOnline"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="recycle">
+      <wsdl:documentation> recycle a card </wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/recycle"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="migration">
+      <wsdl:documentation> perform a migration request for a card </wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/migration"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="recoveryRequest">
+      <wsdl:documentation>register a recovery request </wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/recoveryRequest"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="revocationRequest">
+      <wsdl:documentation>register a revocation request </wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/revocationRequest"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="cardInfo">
+      <wsdl:documentation>retrieve extented information about a
+      card and its content</wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/cardInfo"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="prePersonalize">
+      <wsdl:documentation>Create a new card entry declared as being pre-personalized </wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/prePersonalize"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="authorizeCardActivation">
+      <wsdl:documentation>Authorize the activation of a pre-personalized card </wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/authorizeCardActivation"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="version">
+      <wsdl:documentation>retrieve version information about the SCM Core connector </wsdl:documentation>
+      <soap:operation soapAction="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2/version"
+                      style="rpc"/>
+      <wsdl:input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"
+                   namespace="http://www.opentrust.com/OpenTrust/SCM/Connector/SOAP/2.2"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+  </wsdl:binding>
+  <wsdl:service name="OTSCMConnectorSOAPService">
+    <wsdl:documentation> Connector To access the OpenTrust SCM Connector via SOAP </wsdl:documentation>
+    <wsdl:port name="OTSCMConnectorSOAPPort" binding="scmconn:OTSCMConnectorSOAPBinding">
+      <soap:address location="https://servernotconfigured:8080/connector/connector.cgi"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
