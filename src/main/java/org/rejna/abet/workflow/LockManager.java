@@ -2,12 +2,12 @@ package org.rejna.abet.workflow;
 
 import java.util.Date;
 
+import javax.persistence.LockModeType;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.apache.log4j.Logger;
 import org.rejna.abet.persistence.Lock;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 public class LockManager {
@@ -45,15 +45,9 @@ public class LockManager {
 		}
 	}
 
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = { Exception.class })
+	@Transactional(rollbackFor = { Exception.class })
 	private Lock tryAcquireLock(Lock lock) {
-		Lock l = Lock.findLock(lock.getLockName());
-		logger.info("lock selected, wait 5s");
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-		}
-		logger.info("continue ...");
+		Lock l = Lock.findLock(lock.getLockName(), LockModeType.PESSIMISTIC_READ);
 		if (l == null)
 			lock.persist();
 		else if (l.getExpire().before(new Date())) {
@@ -72,7 +66,7 @@ public class LockManager {
 		releaseLock(lock.getLockName(), lock.getLockType());
 	}
 
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = { Exception.class })
+	@Transactional(rollbackFor = { Exception.class })
 	public synchronized void releaseLock(String lockName, LockType lockType) {
 		logger.info("releaseLock(LockName:" + lockName + ", LockType: "
 				+ lockType + ")");

@@ -60,9 +60,6 @@
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
 		id="transactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
-		<property name="JpaDialect">
-			<bean class="org.rejna.abet.persistence.HibernateExtendedJpaDialect" />
-		</property>
 	</bean>
 
 	<tx:annotation-driven mode="aspectj"
@@ -74,10 +71,11 @@
 		<property name="persistenceUnitName" value="persistenceUnit" />
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	
+	<!-- 
 	<bean id="sessionFactory" factory-bean="entityManagerFactory" factory-method="getSessionFactory" />
 	
 	<bean id="DbDateCheck" class="org.rejna.abet.persistence.DbDateCheck">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
+	 -->
 </beans>

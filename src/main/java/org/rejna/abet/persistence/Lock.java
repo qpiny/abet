@@ -5,6 +5,7 @@ import java.security.InvalidParameterException;
 import java.util.Date;
 
 import javax.persistence.Id;
+import javax.persistence.LockModeType;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -71,5 +72,10 @@ public class Lock implements Serializable {
 		setCount(lock.getCount());
 		setExpire(lock.getExpire());
 	}
+	
+    public static Lock findLock(String lockName, LockModeType lockMode) {
+    	if (lockName == null || lockName.length() == 0) return null;
+        return entityManager().find(Lock.class, lockName, lockMode);
+    }
 
 }

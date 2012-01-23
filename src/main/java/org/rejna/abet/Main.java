@@ -1,7 +1,6 @@
 package org.rejna.abet;
 
 import java.io.File;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.drools.builder.KnowledgeBuilder;
@@ -10,8 +9,6 @@ import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.WorkItemManager;
-import org.hibernate.cfg.Configuration;
-import org.rejna.abet.persistence.DbDateCheck;
 import org.rejna.abet.persistence.Lock;
 import org.rejna.abet.workflow.AntTargetExecution;
 import org.rejna.abet.workflow.LockManager;
@@ -34,7 +31,7 @@ public class Main {
 		
 		//startWorkflow("sample.xml", "workflow1.bpmn", "org.rejna.workflow.workflow1");
 		LockManager lockManager = new LockManager();
-		Lock lock1 = new Lock("test", LockType.READ, 10000);
+		Lock lock1 = new Lock("test", LockType.READ, 60000);
 		//Lock lock2 = new Lock("test2", LockType.READ, 10000);
 		lockManager.acquireLock(lock1);
 		lockManager.acquireLock(lock1);
@@ -42,7 +39,7 @@ public class Main {
 		//lockManager.acquireLock(lock2);
 		// do something
 		//lockManager.releaseLock(lock2);
-		lockManager.releaseLock(lock1);
+		//lockManager.releaseLock(lock1);
 		
 	}
 
