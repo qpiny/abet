@@ -1,32 +1,49 @@
 package org.rejna.abet;
 
 import java.io.File;
+import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.WorkItemManager;
+import org.hibernate.cfg.Configuration;
+import org.rejna.abet.persistence.DbDateCheck;
 import org.rejna.abet.persistence.Lock;
 import org.rejna.abet.workflow.AntTargetExecution;
 import org.rejna.abet.workflow.LockManager;
 import org.rejna.abet.workflow.LockType;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Main {
+	private static final Logger logger = Logger.getLogger(Main.class);
+	private ConfigurableApplicationContext ctx;
+	
 	public static void main(String[] args) {
-		new ClassPathXmlApplicationContext("classpath*:META-INF/spring/applicationContext.xml");
 		new Main("workflow1.bpmn");
 	}
 	
 	public Main(String workflowFileName) {
+		ctx = new ClassPathXmlApplicationContext("classpath*:META-INF/spring/applicationContext.xml");
+		
+		//logger.info("Time delta = " + ctx.getBean("DbDateCheck", DbDateCheck.class).getDelta());
+		
 		//startWorkflow("sample.xml", "workflow1.bpmn", "org.rejna.workflow.workflow1");
 		LockManager lockManager = new LockManager();
-		Lock lock = new Lock("test", LockType.WRITE, 10000);
-		lockManager.acquireLock(lock);
+		Lock lock1 = new Lock("test", LockType.READ, 10000);
+		//Lock lock2 = new Lock("test2", LockType.READ, 10000);
+		lockManager.acquireLock(lock1);
+		lockManager.acquireLock(lock1);
+		//lockManager.acquireLock(lock2);
+		//lockManager.acquireLock(lock2);
 		// do something
-		lockManager.releaseLock(lock);
+		//lockManager.releaseLock(lock2);
+		lockManager.releaseLock(lock1);
+		
 	}
 
 	

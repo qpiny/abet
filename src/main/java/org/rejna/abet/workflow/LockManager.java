@@ -48,12 +48,18 @@ public class LockManager {
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = { Exception.class })
 	private Lock tryAcquireLock(Lock lock) {
 		Lock l = Lock.findLock(lock.getLockName());
+		logger.info("lock selected, wait 5s");
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+		}
+		logger.info("continue ...");
 		if (l == null)
 			lock.persist();
 		else if (l.getExpire().before(new Date())) {
 			logger.info("Previous lock is expired, remove it");
-			l.remove();
-			lock.persist();
+			l.copyFrom(lock);
+			l.flush();
 		} else if (lock.getLockType() == LockType.READ
 				&& l.getLockType() == LockType.READ)
 			l.inc(lock.getExpire());

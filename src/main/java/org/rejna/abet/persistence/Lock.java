@@ -17,7 +17,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooEntity
+@RooEntity(table = "Locks")
 public class Lock implements Serializable {
 
 	private static final long serialVersionUID = -4471303259620725434L;
@@ -63,6 +63,13 @@ public class Lock implements Serializable {
 			setCount(count - 1);
 			flush();
 		}
+	}
+
+	public void copyFrom(Lock lock) {
+		setLockName(lock.getLockName());
+		setLockType(lock.getLockType());
+		setCount(lock.getCount());
+		setExpire(lock.getExpire());
 	}
 
 }
