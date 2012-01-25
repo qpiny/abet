@@ -4,11 +4,14 @@
 package org.rejna.abet.persistence;
 
 import java.lang.Integer;
-import java.lang.String;
+import java.lang.Long;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -24,6 +27,11 @@ privileged aspect Lock_Roo_Entity {
     @PersistenceContext
     transient EntityManager Lock.entityManager;
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long Lock.id;
+    
     @Version
     @Column(name = "version")
     private Integer Lock.version;
@@ -32,6 +40,14 @@ privileged aspect Lock_Roo_Entity {
         super();
     }
 
+    public Long Lock.getId() {
+        return this.id;
+    }
+    
+    public void Lock.setId(Long id) {
+        this.id = id;
+    }
+    
     public Integer Lock.getVersion() {
         return this.version;
     }
@@ -52,7 +68,7 @@ privileged aspect Lock_Roo_Entity {
         if (this.entityManager.contains(this)) {
             this.entityManager.remove(this);
         } else {
-            Lock attached = Lock.findLock(this.lockName);
+            Lock attached = Lock.findLock(this.id);
             this.entityManager.remove(attached);
         }
     }
@@ -91,9 +107,9 @@ privileged aspect Lock_Roo_Entity {
         return entityManager().createQuery("SELECT o FROM Lock o", Lock.class).getResultList();
     }
     
-    public static Lock Lock.findLock(String lockName) {
-        if (lockName == null || lockName.length() == 0) return null;
-        return entityManager().find(Lock.class, lockName);
+    public static Lock Lock.findLock(Long id) {
+        if (id == null) return null;
+        return entityManager().find(Lock.class, id);
     }
     
     public static List<Lock> Lock.findLockEntries(int firstResult, int maxResults) {

@@ -3,6 +3,7 @@
 
 package org.rejna.abet.persistence;
 
+import java.lang.String;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,20 +28,26 @@ privileged aspect LockDataOnDemand_Roo_DataOnDemand {
     
     public Lock LockDataOnDemand.getNewTransientLock(int index) {
         Lock obj = new Lock();
-        setCount(obj, index);
         setExpire(obj, index);
+        setLockManagerId(obj, index);
+        setLockName(obj, index);
         setLockType(obj, index);
         return obj;
-    }
-    
-    public void LockDataOnDemand.setCount(Lock obj, int index) {
-        int count = 0;
-        obj.setCount(count);
     }
     
     public void LockDataOnDemand.setExpire(Lock obj, int index) {
         Date expire = new GregorianCalendar(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH), Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), Calendar.getInstance().get(Calendar.SECOND) + new Double(Math.random() * 1000).intValue()).getTime();
         obj.setExpire(expire);
+    }
+    
+    public void LockDataOnDemand.setLockManagerId(Lock obj, int index) {
+        Long lockManagerId = new Integer(index).longValue();
+        obj.setLockManagerId(lockManagerId);
+    }
+    
+    public void LockDataOnDemand.setLockName(Lock obj, int index) {
+        String lockName = "lockName_" + index;
+        obj.setLockName(lockName);
     }
     
     public void LockDataOnDemand.setLockType(Lock obj, int index) {
@@ -53,13 +60,13 @@ privileged aspect LockDataOnDemand_Roo_DataOnDemand {
         if (index < 0) index = 0;
         if (index > (data.size() - 1)) index = data.size() - 1;
         Lock obj = data.get(index);
-        return Lock.findLock(obj.getLockName());
+        return Lock.findLock(obj.getId());
     }
     
     public Lock LockDataOnDemand.getRandomLock() {
         init();
         Lock obj = data.get(rnd.nextInt(data.size()));
-        return Lock.findLock(obj.getLockName());
+        return Lock.findLock(obj.getId());
     }
     
     public boolean LockDataOnDemand.modifyLock(Lock obj) {

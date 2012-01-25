@@ -25,20 +25,20 @@ privileged aspect Lock_Roo_JavaBean {
         this.lockType = lockType;
     }
     
-    public int Lock.getCount() {
-        return this.count;
-    }
-    
-    public void Lock.setCount(int count) {
-        this.count = count;
-    }
-    
     public Date Lock.getExpire() {
         return this.expire;
     }
     
     public void Lock.setExpire(Date expire) {
         this.expire = expire;
+    }
+    
+    public long Lock.getLockManagerId() {
+        return this.lockManagerId;
+    }
+    
+    public void Lock.setLockManagerId(long lockManagerId) {
+        this.lockManagerId = lockManagerId;
     }
     
 }

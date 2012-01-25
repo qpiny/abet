@@ -78,4 +78,10 @@
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	 -->
+	 
+	 <bean id="LockManager" class="org.rejna.abet.workflow.LockManagerImpl">
+	 	<property name="pollIntervalMin" value="2000"/>
+	 	<property name="pollIntervalMax" value="2000"/>
+	 	<property name="waitFactor" value="0.75"/>
+	 </bean>
 </beans>

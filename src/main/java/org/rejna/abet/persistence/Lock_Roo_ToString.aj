@@ -9,8 +9,9 @@ privileged aspect Lock_Roo_ToString {
     
     public String Lock.toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Count: ").append(getCount()).append(", ");
         sb.append("Expire: ").append(getExpire()).append(", ");
+        sb.append("Id: ").append(getId()).append(", ");
+        sb.append("LockManagerId: ").append(getLockManagerId()).append(", ");
         sb.append("LockName: ").append(getLockName()).append(", ");
         sb.append("LockType: ").append(getLockType()).append(", ");
         sb.append("Version: ").append(getVersion());

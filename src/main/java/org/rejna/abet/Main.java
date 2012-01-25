@@ -30,11 +30,13 @@ public class Main {
 		//logger.info("Time delta = " + ctx.getBean("DbDateCheck", DbDateCheck.class).getDelta());
 		
 		//startWorkflow("sample.xml", "workflow1.bpmn", "org.rejna.workflow.workflow1");
-		LockManager lockManager = new LockManager();
-		Lock lock1 = new Lock("test", LockType.READ, 60000);
+		LockManager lockManager = ctx.getBean("LockManager", LockManager.class);
+		
+		Lock lock1 = lockManager.acquireLock("test", LockType.READ, 60000);
+		Lock lock2 = lockManager.acquireLock("test", LockType.READ, 60000);
 		//Lock lock2 = new Lock("test2", LockType.READ, 10000);
-		lockManager.acquireLock(lock1);
-		lockManager.acquireLock(lock1);
+		lockManager.releaseLock(lock1);
+		lockManager.releaseLock(lock2);
 		//lockManager.acquireLock(lock2);
 		//lockManager.acquireLock(lock2);
 		// do something
