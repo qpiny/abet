@@ -1,4 +1,4 @@
-package org.rejna.abet.persistence;
+package org.rejna.abet.workflow.persistence;
 
 import java.io.Serializable;
 import java.util.Date;

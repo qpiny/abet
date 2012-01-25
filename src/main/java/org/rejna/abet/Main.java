@@ -9,10 +9,10 @@ import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.WorkItemManager;
-import org.rejna.abet.persistence.Lock;
-import org.rejna.abet.workflow.AntTargetExecution;
 import org.rejna.abet.workflow.LockManager;
 import org.rejna.abet.workflow.LockType;
+import org.rejna.abet.workflow.persistence.Lock;
+import org.rejna.abet.workflow.works.AntTargetAction;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -53,7 +53,7 @@ public class Main {
 	}
 	
 	public void registerAntFile(WorkItemManager wim, String antFileName) {
-		wim.registerWorkItemHandler("Ant", new AntTargetExecution(new File(antFileName)));
+		wim.registerWorkItemHandler("Ant", new AntTargetAction(new File(antFileName)));
 	}
 	
 	public void startWorkflow(String antFileName, String workflowFileName, String workflowName) {

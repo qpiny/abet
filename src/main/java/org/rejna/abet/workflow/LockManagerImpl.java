@@ -10,7 +10,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.apache.log4j.Logger;
-import org.rejna.abet.persistence.Lock;
+import org.rejna.abet.workflow.persistence.Lock;
 import org.springframework.transaction.annotation.Transactional;
 
 public class LockManagerImpl implements LockManager {
@@ -35,8 +35,12 @@ public class LockManagerImpl implements LockManager {
 		this.waitFactor = waitFactor;
 	}
 
-	public void setPollInterval(long pollInterval) {
-		this.pollInterval = pollInterval;
+	public void setPollIntervalMin(long pollIntervalMin) {
+		this.pollIntervalMin = pollIntervalMin;
+	}
+
+	public void setPollIntervalMax(long pollIntervalMax) {
+		this.pollIntervalMax = pollIntervalMax;
 	}
 
 	@Transactional(rollbackFor = { Exception.class })

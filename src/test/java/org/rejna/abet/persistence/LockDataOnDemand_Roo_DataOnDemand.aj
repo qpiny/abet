@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Random;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import org.rejna.abet.persistence.Lock;
 import org.rejna.abet.workflow.LockType;
+import org.rejna.abet.workflow.persistence.Lock;
 import org.springframework.stereotype.Component;
 
 privileged aspect LockDataOnDemand_Roo_DataOnDemand {
@@ -80,7 +80,7 @@ privileged aspect LockDataOnDemand_Roo_DataOnDemand {
             return;
         }
         
-        data = new ArrayList<org.rejna.abet.persistence.Lock>();
+        data = new ArrayList<org.rejna.abet.workflow.persistence.Lock>();
         for (int i = 0; i < 10; i++) {
             Lock obj = getNewTransientLock(i);
             try {

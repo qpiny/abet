@@ -1,4 +1,4 @@
-package org.rejna.abet.workflow;
+package org.rejna.abet.workflow.works;
 
 import java.io.File;
 
@@ -12,10 +12,10 @@ import org.drools.runtime.process.WorkItem;
 import org.drools.runtime.process.WorkItemHandler;
 import org.drools.runtime.process.WorkItemManager;
 
-public class AntTargetExecution implements WorkItemHandler {
+public class AntTargetAction implements WorkItemHandler {
 	private Project project = new Project();
 	
-	public AntTargetExecution(File buildFile) {
+	public AntTargetAction(File buildFile) {
 		project.addBuildListener(createLogger());
 		project.init();
 		ProjectHelper.configureProject(project, buildFile);
