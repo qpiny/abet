@@ -7,7 +7,10 @@ import org.apache.tools.ant.BuildLogger;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.ProjectHelperRepository;
 import org.apache.tools.ant.Target;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.resources.JavaResource;
 import org.drools.runtime.process.WorkItem;
 import org.drools.runtime.process.WorkItemHandler;
 import org.drools.runtime.process.WorkItemManager;
@@ -15,10 +18,17 @@ import org.drools.runtime.process.WorkItemManager;
 public class AntTargetAction implements WorkItemHandler {
 	private Project project = new Project();
 	
-	public AntTargetAction(File buildFile) {
+	public AntTargetAction(String buildFile) {
 		project.addBuildListener(createLogger());
 		project.init();
-		ProjectHelper.configureProject(project, buildFile);
+		JavaResource buildResource = new JavaResource(buildFile, Path.systemClasspath);
+		buildResource.setProject(project);
+		ProjectHelper helper = ProjectHelperRepository.getInstance().getProjectHelperForBuildFile(buildResource);
+		project.addReference(ProjectHelper.PROJECTHELPER_REFERENCE, helper);
+		helper.parse(project, buildResource);
+		//getClass().getResource(antFileName))
+
+		//ProjectHelper.configureProject(project, buildResource);
 	}
 	
 	@Override

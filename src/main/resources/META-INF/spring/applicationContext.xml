@@ -83,5 +83,14 @@
 	 	<property name="pollIntervalMin" value="2000"/>
 	 	<property name="pollIntervalMax" value="2000"/>
 	 	<property name="waitFactor" value="0.75"/>
+	 	<property name="transactionManager" ref="transactionManager"/>
+	 </bean>
+	 
+	 <bean id="LockAction" class="org.rejna.abet.workflow.works.LockAction">
+	 	<property name="lockManager" ref="LockManager"/>
+	 </bean>
+
+	 <bean id="UnlockAction" class="org.rejna.abet.workflow.works.UnlockAction">
+	 	<property name="lockManager" ref="LockManager"/>
 	 </bean>
 </beans>

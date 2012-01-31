@@ -4,14 +4,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import javax.persistence.EntityTransaction;
+//import javax.persistence.EntityTransaction;
 import javax.persistence.LockModeType;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.apache.log4j.Logger;
 import org.rejna.abet.workflow.persistence.Lock;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 public class LockManagerImpl implements LockManager {
 	private static final Logger logger = Logger.getLogger(LockManagerImpl.class);
@@ -27,6 +31,8 @@ public class LockManagerImpl implements LockManager {
 	
 	private long id;
 	
+	private AbstractPlatformTransactionManager txManager;
+	
 	public LockManagerImpl() {
 		id = new Random().nextLong();
 	}
@@ -41,6 +47,10 @@ public class LockManagerImpl implements LockManager {
 
 	public void setPollIntervalMax(long pollIntervalMax) {
 		this.pollIntervalMax = pollIntervalMax;
+	}
+	
+	public void setTransactionManager(AbstractPlatformTransactionManager transactionManager) {
+		this.txManager = transactionManager;
 	}
 
 	@Transactional(rollbackFor = { Exception.class })
@@ -71,13 +81,17 @@ public class LockManagerImpl implements LockManager {
 		long now = 0;
 		long maxWait = 0;
 		Lock lock = null;
-		EntityTransaction tx = Lock.entityManager().getTransaction();
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setName("LockTransaction");
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+		TransactionStatus txStatus = txManager.getTransaction(def);
+		//EntityTransaction tx = Lock.entityManager().getTransaction();
 		while (lock == null) {
 			thisLockManager = false;
 			maxWait = 0;
 			now = new Date().getTime();
 			try {
-				tx.begin();
+				//tx.begin();
 				List<Lock> locks = null;
 				switch(lockType) {
 				case READ:
@@ -96,9 +110,11 @@ public class LockManagerImpl implements LockManager {
 				}
 				if (maxWait == 0)
 					lock = new Lock(lockName, lockType, duration, id);
-				tx.commit();
+				//tx.commit();
+				txManager.commit(txStatus);
 			} catch (Exception e) {
-				tx.rollback();
+				//tx.rollback();
+				txManager.rollback(txStatus);
 			}
 
 			try {
