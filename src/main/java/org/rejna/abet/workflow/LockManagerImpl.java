@@ -10,12 +10,12 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.apache.log4j.Logger;
-import org.rejna.abet.workflow.persistence.Lock;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.rejna.abet.workflow.persistence.Lock;
 
 public class LockManagerImpl implements LockManager {
 	private static final Logger logger = Logger.getLogger(LockManagerImpl.class);
@@ -62,7 +62,7 @@ public class LockManagerImpl implements LockManager {
 	}
 	
 	private List<Lock> getReadLock(String lockName) {
-		return Lock.entityManager().createQuery("SELECT l FROM lock l WHERE l.lockName = ?1 AND l.lockType = ?2", Lock.class)
+		return Lock.entityManager().createQuery("SELECT l FROM Lock l WHERE l.lockName = ?1 AND l.lockType = ?2", Lock.class)
 				.setParameter(1, lockName)
 				.setParameter(2, LockType.WRITE)
 				.setLockMode(LockModeType.PESSIMISTIC_READ)
@@ -70,7 +70,7 @@ public class LockManagerImpl implements LockManager {
 	}
 	
 	private List<Lock> getWriteLock(String lockName) {
-		return Lock.entityManager().createQuery("SELECT l FROM lock l WHERE l.lockName = ?1", Lock.class)
+		return Lock.entityManager().createQuery("SELECT l FROM Lock l WHERE l.lockName = ?1", Lock.class)
 				.setParameter(1, lockName)
 				.setLockMode(LockModeType.PESSIMISTIC_READ)
 				.getResultList();
@@ -84,53 +84,54 @@ public class LockManagerImpl implements LockManager {
 		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
 		def.setName("LockTransaction");
 		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-		TransactionStatus txStatus = txManager.getTransaction(def);
-		//EntityTransaction tx = Lock.entityManager().getTransaction();
+		TransactionStatus txStatus = null;
 		while (lock == null) {
 			thisLockManager = false;
 			maxWait = 0;
 			now = new Date().getTime();
-			try {
-				//tx.begin();
-				List<Lock> locks = null;
-				switch(lockType) {
-				case READ:
-					locks = getReadLock(lockName);
-					break;
-				case WRITE:
-					locks = getWriteLock(lockName);
-					break;
-				}
-				for (Lock l : locks) {
-					long wait = l.getExpire().getTime() - now;
-					if (wait < maxWait)
-						continue;
-					if (l.getLockManagerId() == id)
-						thisLockManager = true;
-				}
-				if (maxWait == 0)
-					lock = new Lock(lockName, lockType, duration, id);
-				//tx.commit();
-				txManager.commit(txStatus);
-			} catch (Exception e) {
-				//tx.rollback();
-				txManager.rollback(txStatus);
-			}
-
-			try {
-				if (lock == null) {
-					if (!thisLockManager) {
-						maxWait = (long) (maxWait * waitFactor);
-						if (maxWait > pollIntervalMax)
-							maxWait = pollIntervalMax;
-						else if (maxWait < pollIntervalMin)
-							maxWait = pollIntervalMin;
+			synchronized(this) {
+				try {
+					txStatus = txManager.getTransaction(def);
+					List<Lock> locks = null;
+					switch(lockType) {
+					case READ:
+						locks = getReadLock(lockName);
+						break;
+					case WRITE:
+						locks = getWriteLock(lockName);
+						break;
 					}
-					synchronized(this) {
+					for (Lock l : locks) {
+						long wait = l.getExpire().getTime() - now;
+						if (wait < maxWait)
+							continue;
+						maxWait = wait;
+						if (l.getLockManagerId() == id)
+							thisLockManager = true;
+					}
+					if (maxWait == 0) {
+						lock = new Lock(lockName, lockType, duration, id);
+						lock.persist();
+					}
+					txManager.commit(txStatus);
+				} catch (Exception e) {
+					txManager.rollback(txStatus);
+					logger.warn("acquireLock fails", e);
+				}
+	
+				try {
+					if (lock == null) {
+						if (!thisLockManager) {
+							maxWait = (long) (maxWait * waitFactor);
+							if (maxWait > pollIntervalMax)
+								maxWait = pollIntervalMax;
+							else if (maxWait < pollIntervalMin)
+								maxWait = pollIntervalMin;
+						}
 						wait(maxWait);
 					}
+				} catch (InterruptedException e) {
 				}
-			} catch (InterruptedException e) {
 			}
 		}
 		return lock;

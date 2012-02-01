@@ -1,0 +1,6 @@
+.classpath
+.project
+.settings
+log.roo
+target
+src/main/resources/META-INF/spring/database.properties

@@ -13,11 +13,15 @@
              xmlns:tns="http://www.jboss.org/drools">
 
   <itemDefinition id="_maxDurationItem" structureRef="Integer" />
+  <itemDefinition id="_lock1Item" structureRef="Object" />
+  <itemDefinition id="_lock2Item" structureRef="Object" />
 
   <process processType="Private" isExecutable="true" id="org.rejna.workflow.test1" name="test1" tns:packageName="org.rejna.workflow" >
 
     <!-- process variables -->
     <property id="maxDuration" itemSubjectRef="_maxDurationItem"/>
+    <property id="lock1" itemSubjectRef="_lock1Item"/>
+    <property id="lock2" itemSubjectRef="_lock2Item"/>
 
     <!-- nodes -->
     <startEvent id="_1" name="StartProcess" />
@@ -39,13 +43,6 @@
       <dataInputAssociation>
         <sourceRef>maxDuration</sourceRef>
         <targetRef>_2_durationInput</targetRef>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_2_durationInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">10000</from>
-          <to xsi:type="tFormalExpression">_2_durationInput</to>
-        </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
         <targetRef>_2_lockTypeInput</targetRef>
@@ -102,14 +99,10 @@
     </task>
     <task id="_6" name="test" tns:taskName="Lock" >
       <ioSpecification>
-        <dataInput id="_6_lockInput" name="lock" />
-        <dataInput id="_6_durationInput" name="duration" />
         <dataInput id="_6_lockTypeInput" name="lockType" />
         <dataInput id="_6_lockNameInput" name="lockName" />
         <dataOutput id="_6_lockOutput" name="lock" />
         <inputSet>
-          <dataInputRefs>_6_lockInput</dataInputRefs>
-          <dataInputRefs>_6_durationInput</dataInputRefs>
           <dataInputRefs>_6_lockTypeInput</dataInputRefs>
           <dataInputRefs>_6_lockNameInput</dataInputRefs>
         </inputSet>
@@ -117,17 +110,6 @@
           <dataOutputRefs>_6_lockOutput</dataOutputRefs>
         </outputSet>
       </ioSpecification>
-      <dataInputAssociation>
-        <sourceRef>lock2</sourceRef>
-        <targetRef>_6_lockInput</targetRef>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_6_durationInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">10000</from>
-          <to xsi:type="tFormalExpression">_6_durationInput</to>
-        </assignment>
-      </dataInputAssociation>
       <dataInputAssociation>
         <targetRef>_6_lockTypeInput</targetRef>
         <assignment>

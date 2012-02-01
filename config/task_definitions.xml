@@ -6,10 +6,14 @@
 	</target>
 
 	<target name="task_1">
-		<echo message="task_1" />
+		<echo message="begin> task_1" />
+		<sleep seconds="5"/>
+		<echo message="end> task_1" />
 	</target>
 
 	<target name="task_2">
-		<echo message="task_2" />
+		<echo message="begin> task_2" />
+		<sleep seconds="5"/>
+		<echo message="end> task_2" />
 	</target>
 </project>

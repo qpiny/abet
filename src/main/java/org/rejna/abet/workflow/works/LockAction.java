@@ -3,6 +3,7 @@ package org.rejna.abet.workflow.works;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.drools.runtime.process.WorkItem;
 import org.drools.runtime.process.WorkItemHandler;
 import org.drools.runtime.process.WorkItemManager;
@@ -11,7 +12,7 @@ import org.rejna.abet.workflow.LockType;
 import org.rejna.abet.workflow.persistence.Lock;
 
 public class LockAction implements WorkItemHandler {
-
+	private final static Logger logger = Logger.getLogger(LockAction.class); 
 	private LockManager lockManager;
 	
 	public void setLockManager(LockManager lockManager) {
@@ -19,22 +20,34 @@ public class LockAction implements WorkItemHandler {
 	}
 	
 	@Override
-	public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
-		String lockName = (String) wi.getParameter("lockName");
-		if (lockName == null)
-			throw new RuntimeException("lockName attribute of LockAction is missing");
-		Object lt = wi.getParameter("lockType");
-		if (lt == null)
-			throw new RuntimeException("lockType attribute of LockAction is missing");
+	public void executeWorkItem(final WorkItem wi, final WorkItemManager wim) {
 		try {
-			LockType lockType = LockType.valueOf((String) lt);
-			long duration = Long.parseLong(wi.getParameter("duration").toString());
-			Lock lock = lockManager.acquireLock(lockName.toString(), lockType, duration);
-			Map<String, Object> result = new HashMap<String, Object>();
-			result.put("lock", lock.getId());
-			wim.completeWorkItem(wi.getId(), result);
-		} catch (NumberFormatException e) {
-			throw new RuntimeException("duration attribute must be a valid number");
+			final String lockName = (String) wi.getParameter("lockName");
+			if (lockName == null)
+				throw new RuntimeException("lockName attribute of LockAction is missing");
+		
+		
+			final LockType lockType = LockType.valueOf((String) wi.getParameter("lockType"));
+			
+			long d = 600000;
+			try {
+				d = Long.parseLong(wi.getParameter("duration").toString());
+			} catch (Exception e) {
+				logger.warn("Duration is invalid. Use default value");
+			}
+			final long duration = d;
+			
+			logger.info("acquireLock " + lockName + " (" + lockType + ") " + duration + "ms");
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					Lock lock = lockManager.acquireLock(lockName, lockType, duration);
+					Map<String, Object> result = new HashMap<String, Object>();
+					result.put("lock", lock.getId());
+					wim.completeWorkItem(wi.getId(), result);
+				}
+			}).start();
 		} catch (IllegalArgumentException e) {
 			throw new RuntimeException("lockType attribute must be either READ of WRITE");
 		}

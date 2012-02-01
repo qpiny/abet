@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.apache.tools.ant.Task;
 
-public class PropertyTask extends Task implements PropertyTaskMBean {
+public abstract class PropertyTask extends Task implements PropertyTaskMBean {
 	private Properties properties = new Properties();
 	private HashMap<String,String> property_translation = new HashMap<String,String>();
 	private HashMap<String, Integer> stats = new HashMap<String, Integer>();
